@@ -1,0 +1,307 @@
+﻿<Window x:Class="SmartHouse.Views.TemplateDeviceView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:viewModels="clr-namespace:SmartHouse.ViewModels"
+        d:DataContext="{d:DesignInstance viewModels:TemplateDeviceViewModel}"
+        Title="Шаблоны устройств" Height="880" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.3*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+
+
+        <!--Список шаблонов-->
+        <ListBox Grid.Column="0" Grid.RowSpan="3" ItemsSource="{Binding TemplatesDevices}"
+                 SelectedItem="{Binding SelectedTemplate}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="17" Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Редактировать" Command="{Binding EditCommand}"/>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteCommand}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+
+        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="White"/>
+
+        <!--Информация о шаблоне-->
+        <ScrollViewer Grid.Row="0" Grid.Column="2">
+            <StackPanel>
+
+                <TextBlock FontSize="15" Foreground="#2195f2" Text="Информация о шаблоне устройства:" />
+
+                <TextBlock Text="Код шаблона:" />
+                <TextBox Text="{Binding SelectedTemplate.Name, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <TextBlock Text="Контроллер:" />
+                <ComboBox ItemsSource="{Binding Controllers}" SelectedItem="{Binding SelectedTemplate.Controllers}" DisplayMemberPath="Name">
+
+                    <ComboBox.Style>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+
+
+                <TextBlock Text="Прошивка:" />
+                <ComboBox ItemsSource="{Binding TemplatesFirmwares}" SelectedItem="{Binding SelectedTemplate.TemplatesFirmwares}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Name}"/>
+                                <Run Text="{Binding Version}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+
+                    <ComboBox.Style>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+
+                <TextBlock Text="Датчики:"/>
+
+                <DataGrid ItemsSource="{Binding SelectedTemplate.SensorsOfDevices}" SelectedItem="{Binding SelectedSensorOfDevice}" AutoGenerateColumns="False" Height="150" CanUserAddRows="False">
+                    <DataGrid.Style>
+                        <Style TargetType="{x:Type DataGrid}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Style>
+
+                    <DataGrid.InputBindings>
+                        <KeyBinding Command="{Binding DeleteSensorCommand}" Key="Delete"/>
+                    </DataGrid.InputBindings>
+                    
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Удалить" Command="{Binding DeleteSensorCommand}"/>
+
+                            <ContextMenu.Style>
+                                <Style TargetType="{x:Type ContextMenu}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContextMenu.Style>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Датчик" Binding="{Binding NameSensor}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Параметр" Binding="{Binding NameParameter}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Код параметра" Binding="{Binding CodeParameter}" Width="*"/>
+                        <DataGridTextColumn Header="Индентификатор в устройстве" Binding="{Binding IdInDevice}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                
+                <Button Command="{Binding ToggleAddSensorCommand}" Width="100" Content="Добавить датчик">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Setter Property="Margin" Value="8"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                
+                <GroupBox Header="Новый датчик">
+                    <GroupBox.Style>
+                        <Style TargetType="{x:Type GroupBox}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsNewSensor}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </GroupBox.Style>
+                    
+                    <StackPanel>
+                        <TextBlock Text="Датчик"/>
+                        <ComboBox ItemsSource="{Binding Sensors}" SelectedItem="{Binding SelectedSensor}" SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Name}"/>
+                                        <Run Text="{Binding Description}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Text="Параметр"/>
+                        <ComboBox ItemsSource="{Binding SelectedSensor.SensorParameters}" SelectedItem="{Binding SelectedParameter}" DisplayMemberPath="NameParameter"/>
+
+
+                        <TextBlock Text="Код параметра"/>
+                        <TextBox Text="{Binding CodeParameter}"/>
+                        
+                        <TextBlock Text="Идентификатор в устройстве"/>
+                        <TextBox Text="{Binding IdInDevice}"/>
+
+
+                        <Button Command="{Binding AddSensorCommand}" Width="100" Content="Добавить">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Margin" Value="8"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+        <GridSplitter Grid.Column="2" Grid.Row="1"  ShowsPreview="False" Height="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="LightGray"/>
+
+
+        <!--Информация о прошивке-->
+        <ScrollViewer Grid.Column="2" Grid.Row="2">
+            <StackPanel>
+
+                <TextBlock FontSize="15" Foreground="#2195f2" Text="Информация о прошивке:" />
+
+                <TextBlock Text="Название прошивки:" />
+                <TextBox Text="{Binding SelectedTemplate.TemplatesFirmwares.Name}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <TextBlock Text="Версия:" />
+                <TextBox Text="{Binding SelectedTemplate.TemplatesFirmwares.Version}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+
+                <TextBlock Text="Текст прошивки:" />
+                <TextBox Height="200" Text="{Binding SelectedTemplate.TemplatesFirmwares.TextTemplate}" TextWrapping="Wrap" AcceptsReturn="True">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button Width="100" Height="20" Grid.Row="3" Grid.Column="0" Command="{Binding AddCommand}" Content="Добавить"/>
+
+        <Button Width="100" Height="20" Grid.Row="3" Grid.Column="2" Command="{Binding ChangeCommand}" Content="Сохранить">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</Window>

@@ -1,0 +1,124 @@
+﻿<Window x:Class="SmartHouse.Views.TemplateFirmwareView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartHouse.Views"
+        mc:Ignorable="d"
+        xmlns:viewModels="clr-namespace:SmartHouse.ViewModels"
+        d:DataContext="{d:DesignInstance viewModels:TemplateFirmwareViewModel}"
+        Title="Шаблоны прошивок" Height="500" Width="800" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.3*"/>
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+
+        <!--Список шаблонов-->
+        <ListBox Grid.Column="0" Grid.RowSpan="3" ItemsSource="{Binding TemplatesFirmware}"
+                 SelectedItem="{Binding SelectedTemplate}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="17" Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Редактировать" Command="{Binding EditCommand}"/>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteCommand}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="White"/>
+
+
+        <!--Информация о шаблоне-->
+        <ScrollViewer Grid.Row="0" Grid.Column="2">
+            <StackPanel>
+
+                <TextBlock FontSize="15" Foreground="#2195f2" Text="Информация о шаблоне прошивки:" />
+
+                <TextBlock Text="Название шаблона:" />
+                <TextBox Text="{Binding SelectedTemplate.Name, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <TextBlock Text="Версия:" />
+                <TextBox Text="{Binding SelectedTemplate.Version, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <TextBlock Text="Текст прошивки:" />
+                <TextBox Height="250" Text="{Binding SelectedTemplate.TextTemplate}" TextWrapping="Wrap" AcceptsReturn="True">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button Width="100" Height="20" Grid.Row="3" Grid.Column="0" Command="{Binding AddCommand}" Content="Добавить"/>
+
+        <Button Width="100" Height="20" Grid.Row="3" Grid.Column="2" Command="{Binding ChangeCommand}" Content="Сохранить">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</Window>

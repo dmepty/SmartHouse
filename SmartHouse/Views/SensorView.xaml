@@ -1,0 +1,207 @@
+﻿<Window x:Class="SmartHouse.Views.SensorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:viewModels="clr-namespace:SmartHouse.ViewModels"
+         d:DataContext="{d:DesignInstance viewModels:SensorViewModel}"
+        Title="Датчики" Height="600" Width="650" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+
+        
+        <!--Список датчиков-->
+        <ListBox Grid.Column="0" ItemsSource="{Binding Sensors}" SelectedItem="{Binding SelectedSensor}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="3">
+                        <TextBlock FontSize="17" Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Редактировать" Command="{Binding EditCommand}"/>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteCommand}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+
+        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="White"/>
+
+        <!--Информация о датчиках-->
+        <ScrollViewer Grid.Row="0" Grid.Column="2">
+            <StackPanel>
+                
+                <TextBlock FontSize="15" Foreground="#2195f2" Text="Информация о датчике:" />
+                
+                <TextBlock Text="Название:" />
+                <TextBox Text="{Binding SelectedSensor.Name, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <TextBlock Text="Описание:" />
+                <TextBox Height="100" Text="{Binding SelectedSensor.Description}" TextWrapping="Wrap">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Setter Property="Margin" Value="0,0,3,0"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedSensor.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+                <TextBlock Text="Параметры:"/>
+                <DataGrid ItemsSource="{Binding SelectedSensor.SensorParameters}" SelectedItem="{Binding SelectedSensorParameter}" Height="150" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Style>
+                        <Style TargetType="{x:Type DataGrid}">
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedSensor.IsEdit}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Style>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Параметр" Binding="{Binding NameParameter}"/>
+                        <DataGridTextColumn Header="Тип параметра" Binding="{Binding NameTypeParameter}" Width="*"/>
+                    </DataGrid.Columns>
+                    
+                    <DataGrid.InputBindings>
+                        <KeyBinding Command="{Binding DeleteParameterCommand}" Key="Delete"/>
+                    </DataGrid.InputBindings>
+                    
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Удалить" Command="{Binding DeleteParameterCommand}"/>
+
+                            <ContextMenu.Style>
+                                <Style TargetType="{x:Type ContextMenu}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedSensor.IsEdit}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContextMenu.Style>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+
+                
+                
+                <Button Command="{Binding ToggleAddParameterCommand}" Width="120" Content="Добавить параметр">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Setter Property="Margin" Value="8"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedSensor.IsEdit}" Value="True">
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                
+                
+                <GroupBox Header="Новый параметр">
+                    <GroupBox.Style>
+                        <Style TargetType="{x:Type GroupBox}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedSensor.IsNewParameter}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </GroupBox.Style>
+
+                    <StackPanel>
+                        <TextBlock Text="Параметры"/>
+                        <ComboBox ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameter}" SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Name}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Text="Тип параметра"/>
+                        <ComboBox ItemsSource="{Binding ParameterTypes}" SelectedItem="{Binding SelectedParameterType}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Name}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+
+                        <Button Command="{Binding AddParameterCommand}" Width="100" Content="Добавить">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Margin" Value="8"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+
+        
+        
+        
+        <Button Width="100" Height="20" Grid.Row="1" Grid.Column="0" Command="{Binding AddCommand}" Content="Добавить"/>
+
+        <Button Width="100" Height="20" Grid.Row="1" Grid.Column="2" Command="{Binding ChangeCommand}" Content="Сохранить">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedSensor.IsEdit}" Value="True">
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</Window>
