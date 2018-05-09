@@ -56,6 +56,7 @@ namespace SmartHouse.ViewModels
         private ICommand _showTemplateFirmwareWindow;
         private ICommand _showSensorWindow;
         private ICommand _showParameterWindow;
+        private ICommand _hideInTray;
         #endregion
 
         public MainViewModel()
@@ -182,6 +183,9 @@ namespace SmartHouse.ViewModels
                 ValueCurrentHumidity = (valueCurrentHumidity[0].Value / 100).ToString("#%");
                 ValueCurrentPressure = valueCurrentPressure[0].Value.ToString("0 мм рт столба");
 
+                if(Int32.Parse(valueCurrentTemperature[0].Value.ToString()) > 40)
+                    ClosingBehavior.NotifyIcon.ShowBalloonTip(1000);
+
                 if (ValueTemperature.Count > 10)
                 {
                     SeriesTemperature[0].Values.Add(valueTemp.Last());
@@ -198,6 +202,7 @@ namespace SmartHouse.ViewModels
 
                     BackClient.SendRequest("http://h92761ae.beget.tech/delete_old_parameter.php?");
                 }
+                
             }
             catch (Exception ex)
             {

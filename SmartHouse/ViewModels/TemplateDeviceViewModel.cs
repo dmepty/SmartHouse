@@ -56,11 +56,11 @@ namespace SmartHouse.ViewModels
 
                 foreach (var sensor in Sensors)
                 {
-                    foreach (var SensorParameter in SensorParameters)
+                    foreach (var sensorParameter in SensorParameters)
                     {
-                        if (sensor.Id == SensorParameter.IdSensor)
+                        if (sensor.Id == sensorParameter.IdSensor)
                         {
-                            sensor.SensorParameters.Add(SensorParameter);
+                            sensor.SensorParameters.Add(sensorParameter);
                         }
                     }
                 }

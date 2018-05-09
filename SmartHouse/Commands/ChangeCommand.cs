@@ -1,4 +1,5 @@
-﻿using SmartHouse.ViewModels;
+﻿using System.Linq;
+using SmartHouse.ViewModels;
 using System.Windows;
 using Newtonsoft.Json;
 
@@ -19,6 +20,10 @@ namespace SmartHouse.Commands
         }
 
         public ChangeCommand(SensorViewModel sensorViewModel) : base(sensorViewModel)
+        {
+        }
+
+        public ChangeCommand(ParameterViewModel parameterViewModel) : base(parameterViewModel)
         {
         }
 
@@ -166,6 +171,24 @@ namespace SmartHouse.Commands
                 }
 
                 if (!BackClient.SendRequest(url))
+                    return;
+
+                MessageBox.Show("Сохранение успешно!", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+
+            }
+
+            //Изменение параметров
+            if (_parameterViewModel != null)
+            {
+                var parameters = _parameterViewModel.Parameters;
+
+                if (parameters[parameters.Count - 1].Id == 0)
+                    parameters[parameters.Count - 1].Id = parameters[parameters.Count - 2].Id + 1;
+
+                var jsonObject = JsonConvert.SerializeObject(parameters);
+                var urlPost = "http://h92761ae.beget.tech/rewrite_parameters.php";
+
+                if (!BackClient.SendPostRequest(urlPost, jsonObject))
                     return;
 
                 MessageBox.Show("Сохранение успешно!", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Asterisk);

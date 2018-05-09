@@ -15,10 +15,6 @@ namespace SmartHouse.Commands
         {
         }
 
-        public ToggleAddButtonCommand(ParameterViewModel parameterViewModel) : base(parameterViewModel)
-        {
-        }
-
         public override bool CanExecute(object parameter)
         {
             return true;
@@ -34,11 +30,6 @@ namespace SmartHouse.Commands
             if(_sensorViewModel != null)
             {
                 _sensorViewModel.SelectedSensor.IsNewParameter = !_sensorViewModel.SelectedSensor.IsNewParameter;
-            }
-
-            if (_parameterViewModel != null)
-            {
-                _parameterViewModel.NewParameter = !_parameterViewModel.NewParameter;
             }
         }
     }

@@ -11,16 +11,18 @@ namespace SmartHouse.ViewModels
     {
         public ObservableCollection<Parameter> Parameters { get; set; }
 
-        public bool NewParameter { get; set; }
+        public int CountParamsAtStart { get; set; }
 
-        public ICommand _toggleAddparameterCommand;
+        private ICommand _changeCommand;
+
 
         public ParameterViewModel()
         {
             Parameters = BackClient.GetEntities<ObservableCollection<Parameter>>("json_parameters.php");
+
+            CountParamsAtStart = Parameters.Count;
         }
 
-        public ICommand ToggleAddParameterCommand =>
-            _toggleAddparameterCommand ?? (_toggleAddparameterCommand = new ToggleAddButtonCommand(this));
+        public ICommand ChangeCommand => _changeCommand ?? (_changeCommand = new ChangeCommand(this));
     }
 }
