@@ -15,6 +15,10 @@ namespace SmartHouse.Commands
         {
         }
 
+        public AddInTableCommand(ParameterViewModel parameterViewModel) : base(parameterViewModel)
+        {
+        }
+
         public override bool CanExecute(object parameter)
         {
             return true;
@@ -84,6 +88,30 @@ namespace SmartHouse.Commands
                 };
 
                 _sensorViewModel.SelectedSensor.SensorParameters.Add(sensorParameter);
+            }
+
+            //Добавление параметров
+            if (_parameterViewModel != null)
+            {
+                if (string.IsNullOrEmpty(_parameterViewModel.Name) || string.IsNullOrEmpty(_parameterViewModel.Description))
+                {
+                    MessageBox.Show("Заполните все поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                string url = "http://h92761ae.beget.tech/add_parameter.php?name=" + _parameterViewModel.Name +
+                             "&description=" + _parameterViewModel.Description;
+
+                if (!BackClient.SendRequest(url))
+                    return;
+
+                Parameter param = new Parameter
+                {
+                    Name = _parameterViewModel.Name,
+                    Description = _parameterViewModel.Description
+                };
+
+                _parameterViewModel.Parameters.Add(param);
             }
         }
     }

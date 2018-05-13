@@ -10,19 +10,20 @@ namespace SmartHouse.ViewModels
     class ParameterViewModel
     {
         public ObservableCollection<Parameter> Parameters { get; set; }
+        
+        public string Name { get; set; }
+        public string Description { get; set; }
 
-        public int CountParamsAtStart { get; set; }
-
-        private ICommand _changeCommand;
+        private ICommand _addParameterCommand;
 
 
         public ParameterViewModel()
         {
             Parameters = BackClient.GetEntities<ObservableCollection<Parameter>>("json_parameters.php");
-
-            CountParamsAtStart = Parameters.Count;
         }
 
-        public ICommand ChangeCommand => _changeCommand ?? (_changeCommand = new ChangeCommand(this));
+        public ICommand AddParameterCommand =>
+            _addParameterCommand ?? (_addParameterCommand = new AddInTableCommand(this));
+
     }
 }

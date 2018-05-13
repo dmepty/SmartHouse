@@ -6,28 +6,41 @@
         mc:Ignorable="d"
         xmlns:viewModels="clr-namespace:SmartHouse.ViewModels"
         d:DataContext="{d:DesignInstance viewModels:ParameterViewModel}"
-        Title="Параметры датчиков" Height="300" Width="500" WindowStartupLocation="CenterScreen">
+        Title="Параметры датчиков" Height="500" Width="500" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.7*"/>
         </Grid.RowDefinitions>
-        <DockPanel>
-            <DataGrid ItemsSource="{Binding Parameters}" AutoGenerateColumns="False">
+        <DockPanel Grid.Row="0">
+            <DataGrid ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
                 </DataGrid.Columns>
-
-
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Редактировать"/>
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
             </DataGrid>
         </DockPanel>
+        
+        <StackPanel Grid.Row="1">
+            <GroupBox Header="Новый параметр">
+                <StackPanel>
+                    <TextBlock Text="Название"/>
+                    <TextBox Text="{Binding Name}"/>
+                    
 
-        <Button Grid.Row="1" Grid.Column="0" Height="24" Width="100" Command="{Binding ChangeCommand}" Content="Сохранить"/>
+                    <TextBlock Text="Описание"/>
+                    <TextBox Height="100" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Description}"/>
+
+
+                    <Button Command="{Binding AddParameterCommand}" Width="100" Content="Добавить">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Margin" Value="8"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
     </Grid>
 </Window>

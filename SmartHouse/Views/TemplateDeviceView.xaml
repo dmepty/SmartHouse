@@ -121,11 +121,11 @@
                         <Style TargetType="{x:Type DataGrid}">
                             <Setter Property="IsReadOnly" Value="True"/>
 
-                            <Style.Triggers>
+                            <!--<Style.Triggers>
                                 <DataTrigger Binding="{Binding SelectedTemplate.IsEdit}" Value="True">
                                     <Setter Property="IsReadOnly" Value="False"/>
                                 </DataTrigger>
-                            </Style.Triggers>
+                            </Style.Triggers>-->
                         </Style>
                     </DataGrid.Style>
 
