@@ -49,6 +49,9 @@ namespace SmartHouse.ViewModels
 
         private readonly BackgroundWorker _backgroundWorker;
 
+        public bool FirstRelayStatus { get ; set; }
+        public bool SecondRelayStatus { get; set; }
+
 
 
         private ICommand _showDeviceWindow;
@@ -56,11 +59,13 @@ namespace SmartHouse.ViewModels
         private ICommand _showTemplateFirmwareWindow;
         private ICommand _showSensorWindow;
         private ICommand _showParameterWindow;
-        private ICommand _hideInTray;
+        private ICommand _setFirstRelayStatusCommand;
+        private ICommand _setSecondRelayStatusCommand;
         #endregion
 
         public MainViewModel()
         {
+            //Создание графиков
             SeriesTemperature = new SeriesCollection
             {
                 new LineSeries
@@ -92,6 +97,12 @@ namespace SmartHouse.ViewModels
                 ValueTemperature = BackClient.GetEntities<List<ValueParameters>>("json_old_parameters_temp.php");
                 ValueHumidity = BackClient.GetEntities<List<ValueParameters>>("json_old_parameters_hum.php");
                 ValuePressure = BackClient.GetEntities<List<ValueParameters>>("json_old_parameters_pres.php");
+
+                //получение статуса реле
+                var RelaysStatus = BackClient.GetEntities<string>("get_rele_status.php");
+
+                FirstRelayStatus = RelaysStatus[0] != '0';
+                SecondRelayStatus = RelaysStatus[1] != '0';
             }
             catch (WebException ex)
             {
@@ -144,7 +155,7 @@ namespace SmartHouse.ViewModels
                     if (_backgroundWorker.CancellationPending)
                         break;
 
-                    Thread.Sleep(3000);
+                    Thread.Sleep(30000);
                 }
             };
 
@@ -175,6 +186,8 @@ namespace SmartHouse.ViewModels
                 foreach (var values in ValuePressure)
                     valuePres.Add(values.Value);
 
+
+                //Получение текущих значений
                 var valueCurrentTemperature = BackClient.GetEntities<List<ValueParameters>>("json_current_parameters_temp.php");
                 var valueCurrentHumidity = BackClient.GetEntities<List<ValueParameters>>("json_current_parameters_hum.php");
                 var valueCurrentPressure = BackClient.GetEntities<List<ValueParameters>>("json_current_parameters_pres.php");
@@ -183,9 +196,18 @@ namespace SmartHouse.ViewModels
                 ValueCurrentHumidity = (valueCurrentHumidity[0].Value / 100).ToString("#%");
                 ValueCurrentPressure = valueCurrentPressure[0].Value.ToString("0 мм рт столба");
 
-                if(Int32.Parse(valueCurrentTemperature[0].Value.ToString()) > 40)
-                    ClosingBehavior.NotifyIcon.ShowBalloonTip(1000);
 
+                //Работа в трее
+                if (Int32.Parse(valueCurrentTemperature[0].Value.ToString()) > 35)
+                {
+                    ClosingBehavior.NotifyIcon.BalloonTipText =
+                        @"Температура превысила допустимы значения! Температура: " +
+                        valueCurrentTemperature[0].Value;
+                    ClosingBehavior.NotifyIcon.ShowBalloonTip(1000);
+                }
+
+
+                //Обновление графиков
                 if (ValueTemperature.Count > 10)
                 {
                     SeriesTemperature[0].Values.Add(valueTemp.Last());
@@ -213,10 +235,25 @@ namespace SmartHouse.ViewModels
 
         }
 
-        public ICommand ShowDeviceWindow => _showDeviceWindow ?? (_showDeviceWindow = new OpenDeviceWindow());
-        public ICommand ShowTemplateDeviceWindow => _showTemplateDeviceWindow ?? (_showTemplateDeviceWindow = new OpenTemplateDeviceWindow());
-        public ICommand ShowTemplateFirmwareCommand => _showTemplateFirmwareWindow ?? (_showTemplateFirmwareWindow = new OpenTemplateFirmwareWindow());
-        public ICommand ShowSensorWindow => _showSensorWindow ?? (_showSensorWindow = new OpenSensorWindow());
-        public ICommand ShowParameterWindow => _showParameterWindow ?? (_showParameterWindow = new OpenParameterWindow());
+        public ICommand ShowDeviceWindow => _showDeviceWindow ?? 
+                                            (_showDeviceWindow = new OpenDeviceWindow());
+
+        public ICommand ShowTemplateDeviceWindow => _showTemplateDeviceWindow ?? 
+                                                    (_showTemplateDeviceWindow = new OpenTemplateDeviceWindow());
+
+        public ICommand ShowTemplateFirmwareCommand => _showTemplateFirmwareWindow ?? 
+                                                       (_showTemplateFirmwareWindow = new OpenTemplateFirmwareWindow());
+
+        public ICommand ShowSensorWindow => _showSensorWindow ?? 
+                                            (_showSensorWindow = new OpenSensorWindow());
+
+        public ICommand ShowParameterWindow => _showParameterWindow ?? 
+                                               (_showParameterWindow = new OpenParameterWindow());
+
+        public ICommand SetFirstRelayStatusCommand => _setFirstRelayStatusCommand ??
+                                                      (_setFirstRelayStatusCommand = new SetFirstRelayStatusCommand(this));
+
+        public ICommand SetSecondRelayStatusCommand => _setSecondRelayStatusCommand ??
+                                                       (_setSecondRelayStatusCommand = new SetSecondRelayStatusCommand(this));
     }
 }

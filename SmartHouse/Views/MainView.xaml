@@ -14,16 +14,19 @@
         Title="Умный дом" Height="600" Width="800" WindowStartupLocation="CenterScreen">
 
     <i:Interaction.Behaviors>
-        <smartHouse:ClosingBehavior></smartHouse:ClosingBehavior>
+        <smartHouse:ClosingBehavior/>
     </i:Interaction.Behaviors>
 
     <Grid>
+        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="0.5*"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition Height="0.4*"/>
         </Grid.RowDefinitions>
 
         <!--Главное меню-->
@@ -112,5 +115,68 @@
                 <lvc:Axis Title="Давление" LabelFormatter="{Binding YFormatterPressure}"/>
             </lvc:CartesianChart.AxisY>
         </lvc:CartesianChart>
+
+        <DockPanel Grid.Row="5">
+            <Grid>
+                <Grid.Resources>
+                    <Style x:Key="Title" TargetType="{x:Type TextBlock}">
+                        <Setter Property="FontFamily" Value="Verdana"/>
+                        <Setter Property="FontSize" Value="15"/>
+                    </Style>
+                </Grid.Resources>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center" Text="Реле №1" 
+                           Style="{DynamicResource Title}"/>
+                <RadioButton Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10px"
+                             GroupName="ReleOne" Content="Включен" Command="{Binding SetFirstRelayStatusCommand}">
+                    <RadioButton.Style>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Setter Property="FontFamily" Value="Verdana"/>
+                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="Foreground" Value="#2195f2"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FirstRelayStatus}" Value="True">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding FirstRelayStatus}" Value="False">
+                                    <Setter Property="IsChecked" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+
+
+                <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center" Text="Реле №2" 
+                           Style="{DynamicResource Title}"/>
+                <RadioButton Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10px"
+                             GroupName="ReleTwo" Content="Включен" Command="{Binding SetSecondRelayStatusCommand}">
+                    <RadioButton.Style>
+                        <Style TargetType="{x:Type RadioButton}">
+                            <Setter Property="FontFamily" Value="Verdana"/>
+                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="Foreground" Value="#2195f2"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SecondRelayStatus}" Value="True">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding SecondRelayStatus}" Value="False">
+                                    <Setter Property="IsChecked" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>

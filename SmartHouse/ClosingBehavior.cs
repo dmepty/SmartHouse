@@ -21,7 +21,6 @@ namespace SmartHouse
             base.OnAttached();
 
             NotifyIcon = new NotifyIcon();
-            NotifyIcon.BalloonTipText = @"Температура превысила допустимы значения!";
             NotifyIcon.Icon = new Icon("icon.ico");
             NotifyIcon.DoubleClick += (sender, args) => AssociatedObject.Show();
 

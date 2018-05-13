@@ -96,6 +96,8 @@
     <Compile Include="Commands\OpenParameterWindow.cs" />
     <Compile Include="Commands\OpenSensorWindow.cs" />
     <Compile Include="Commands\OpenTemplateFirmwareWindow.cs" />
+    <Compile Include="Commands\SetFirstRelayStatusCommand.cs" />
+    <Compile Include="Commands\SetSecondRelayStatusCommand.cs" />
     <Compile Include="Commands\ToggleAddButtonCommand.cs" />
     <Compile Include="Commands\DeleteCommand.cs" />
     <Compile Include="Commands\EditCommand.cs" />

@@ -11,6 +11,7 @@ namespace SmartHouse.Commands
         protected TemplateFirmwareViewModel _templateFirmwareViewModel;
         protected SensorViewModel _sensorViewModel;
         protected ParameterViewModel _parameterViewModel;
+        protected MainViewModel _mainViewModel;
 
         public Command()
         {
@@ -39,6 +40,11 @@ namespace SmartHouse.Commands
         public Command(ParameterViewModel parameterViewModel)
         {
             _parameterViewModel = parameterViewModel;
+        }
+
+        public Command(MainViewModel mainViewModel)
+        {
+            _mainViewModel = mainViewModel;
         }
 
 
