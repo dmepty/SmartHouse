@@ -130,6 +130,7 @@
     <Compile Include="Views\TemplateFirmwareView.xaml.cs">
       <DependentUpon>TemplateFirmwareView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WarningBehavior.cs" />
     <Page Include="Views\DeviceView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

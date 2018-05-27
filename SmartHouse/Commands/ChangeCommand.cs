@@ -23,10 +23,6 @@ namespace SmartHouse.Commands
         {
         }
 
-        public ChangeCommand(ParameterViewModel parameterViewModel) : base(parameterViewModel)
-        {
-        }
-
         public override bool CanExecute(object parameter)
         {
             return true;
@@ -37,17 +33,26 @@ namespace SmartHouse.Commands
             //Изменение устройства
             if (_deviceViewModel != null)
             {
-                var url = "http://h92761ae.beget.tech/change_device.php?id=" + _deviceViewModel.SelectedDevice.Id +
-                          "&id_temp_device=" + _deviceViewModel.SelectedDevice.TemplateDevice.Id +
-                          "&id_temp_firmware=" + _deviceViewModel.SelectedDevice.TemplatesFirmwares.Id +
-                          "&name_temp=" + _deviceViewModel.SelectedDevice.TemplateDeviceName +
-                          "&code_device=" + _deviceViewModel.SelectedDevice.CodeDevice +
-                          "&description=" + _deviceViewModel.SelectedDevice.Description;
+                var selecteddevice = _deviceViewModel.SelectedDevice;
+
+                if(selecteddevice == null || selecteddevice.TemplateDevice == null || selecteddevice.TemplatesFirmwares == null)
+                {
+                    MessageBox.Show("Заполните все поля!", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var url = "http://h92761ae.beget.tech/change_device.php?id=" + selecteddevice.Id +
+                          "&id_temp_device=" + selecteddevice.TemplateDevice.Id +
+                          "&id_temp_firmware=" + selecteddevice.TemplatesFirmwares.Id +
+                          "&name_temp=" + selecteddevice.TemplateDeviceName +
+                          "&code_device=" + selecteddevice.CodeDevice +
+                          "&description=" + selecteddevice.Description;
 
                 if (_deviceViewModel.SelectedDevice.CodeDevice == "")
                 {
                     MessageBox.Show("Поле 'Код устройства' обязательно для заполнения!", "Ошибка",
-                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -57,7 +62,7 @@ namespace SmartHouse.Commands
                 MessageBox.Show("Сохранение успешно!", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 
 
-                _deviceViewModel.SelectedDevice.IsEdit = false;
+                selecteddevice.IsEdit = false;
             }
 
             //Изменение шаблона устройства
@@ -65,18 +70,15 @@ namespace SmartHouse.Commands
             {
                 var selected = _templateDeviceViewModel.SelectedTemplate;
 
+                if (selected == null || selected.Controllers == null || selected.TemplatesFirmwares == null)
+                {
+                    MessageBox.Show("Заполните все поля!", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 var jsonObject = JsonConvert.SerializeObject(selected.SensorsOfDevices);
 
-
-                var url = "http://h92761ae.beget.tech/change_template_device.php?id_dev=" + selected.Id +
-                             "&name_dev=" + selected.Name +
-                             "&id_controllers=" + selected.Controllers.Id +
-                             "&id_template_firmware=" + selected.TemplatesFirmwares.Id +
-                             "&name_firm=" + selected.TemplatesFirmwares.Name +
-                             "&version=" + selected.TemplatesFirmwares.Version +
-                             "&text_template=" + selected.TemplatesFirmwares.TextTemplate;
-
-                var urlPost = "http://h92761ae.beget.tech/rewrite_sensors.php";
 
 
                 if (selected.Name == "")
@@ -100,11 +102,22 @@ namespace SmartHouse.Commands
                     return;
                 }
 
+                var url = "http://h92761ae.beget.tech/change_template_device.php?id_dev=" + selected.Id +
+                          "&name_dev=" + selected.Name +
+                          "&id_controllers=" + selected.Controllers.Id +
+                          "&id_template_firmware=" + selected.TemplatesFirmwares.Id +
+                          "&name_firm=" + selected.TemplatesFirmwares.Name +
+                          "&version=" + selected.TemplatesFirmwares.Version +
+                          "&text_template=" + selected.TemplatesFirmwares.TextTemplate;
+
+                var urlPost = "http://h92761ae.beget.tech/rewrite_sensors.php";
+
                 if (!BackClient.SendRequest(url))
                     return;
 
                 if (!BackClient.SendPostRequest(urlPost, jsonObject))
                     return;
+
 
 
                 MessageBox.Show("Сохранение успешно!", "Сохранение", MessageBoxButton.OK, MessageBoxImage.Asterisk);

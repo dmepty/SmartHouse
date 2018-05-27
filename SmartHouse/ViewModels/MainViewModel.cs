@@ -99,10 +99,10 @@ namespace SmartHouse.ViewModels
                 ValuePressure = BackClient.GetEntities<List<ValueParameters>>("json_old_parameters_pres.php");
 
                 //получение статуса реле
-                var RelaysStatus = BackClient.GetEntities<string>("get_rele_status.php");
+                var relaysStatus = BackClient.GetEntities<string>("get_rele_status.php");
 
-                FirstRelayStatus = RelaysStatus[0] != '0';
-                SecondRelayStatus = RelaysStatus[1] != '0';
+                FirstRelayStatus = relaysStatus[0] != '0';
+                SecondRelayStatus = relaysStatus[1] != '0';
             }
             catch (WebException ex)
             {
@@ -192,7 +192,7 @@ namespace SmartHouse.ViewModels
                 var valueCurrentHumidity = BackClient.GetEntities<List<ValueParameters>>("json_current_parameters_hum.php");
                 var valueCurrentPressure = BackClient.GetEntities<List<ValueParameters>>("json_current_parameters_pres.php");
 
-                ValueCurrentTemperature = valueCurrentTemperature[0].Value.ToString("0.0°");
+                ValueCurrentTemperature = valueCurrentTemperature[0].Value.ToString("0°");
                 ValueCurrentHumidity = (valueCurrentHumidity[0].Value / 100).ToString("#%");
                 ValueCurrentPressure = valueCurrentPressure[0].Value.ToString("0 мм рт столба");
 

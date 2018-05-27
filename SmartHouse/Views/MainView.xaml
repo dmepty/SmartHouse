@@ -17,6 +17,7 @@
         <smartHouse:ClosingBehavior/>
     </i:Interaction.Behaviors>
 
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -70,7 +71,11 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Text="Температура" Style="{StaticResource Title}"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center"  Text="{Binding ValueCurrentTemperature}" Style="{StaticResource Value}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center"  Text="{Binding ValueCurrentTemperature, NotifyOnTargetUpdated=True}" Style="{StaticResource Value}">
+                    <i:Interaction.Behaviors>
+                        <smartHouse:WarningBehavior/>
+                    </i:Interaction.Behaviors>
+                </TextBlock>
 
                 <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Text="Влажность" Style="{StaticResource Title}"/>
                 <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center"  Text="{Binding ValueCurrentHumidity}" Style="{StaticResource Value}"/>
