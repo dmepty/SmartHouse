@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SmartHouse.ViewModels;
+﻿using SmartHouse.ViewModels;
 using System.Windows;
 using Newtonsoft.Json;
 

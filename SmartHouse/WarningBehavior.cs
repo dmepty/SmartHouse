@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
@@ -20,10 +16,10 @@ namespace SmartHouse
             AssociatedObject.TargetUpdated += AssociatedObject_TargetUpdated;
         }
 
-
+        
         private void AssociatedObject_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
-            if (!String.IsNullOrEmpty(AssociatedObject.Text))
+            if (!String.IsNullOrEmpty(AssociatedObject.Text) && AssociatedObject.IsVisible)
             {
                 string value = AssociatedObject.Text.TrimEnd('°');
 

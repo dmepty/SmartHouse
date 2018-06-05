@@ -6,11 +6,12 @@
         mc:Ignorable="d"
         xmlns:viewModels="clr-namespace:SmartHouse.ViewModels"
         d:DataContext="{d:DesignInstance viewModels:ParameterViewModel}"
-        Title="Параметры датчиков" Height="500" Width="500" WindowStartupLocation="CenterScreen">
+        Title="Параметры датчиков" Height="400" Width="500" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
             <DataGrid ItemsSource="{Binding Parameters}" AutoGenerateColumns="False" CanUserAddRows="False">
@@ -20,8 +21,10 @@
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
-        
-        <StackPanel Grid.Row="1">
+
+        <GridSplitter Grid.Row="1" ShowsPreview="False" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="White"/>
+
+        <StackPanel Grid.Row="2">
             <GroupBox Header="Новый параметр">
                 <StackPanel>
                     <TextBlock Text="Название"/>

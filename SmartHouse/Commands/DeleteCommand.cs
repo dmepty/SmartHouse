@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using SmartHouse.ViewModels;
 
 namespace SmartHouse.Commands

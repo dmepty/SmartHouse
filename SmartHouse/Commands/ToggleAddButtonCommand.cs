@@ -1,7 +1,4 @@
 ﻿using SmartHouse.ViewModels;
-using SmartHouse.Models;
-using System.Linq;
-using System.Windows;
 
 namespace SmartHouse.Commands
 {

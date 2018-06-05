@@ -1,5 +1,4 @@
-﻿using PropertyChanged;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace SmartHouse.Models
 {
