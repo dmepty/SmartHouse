@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\user\Desktop\SmartHouse\SmartHouse\obj\Debug\
+C:\Users\user\Desktop\Code\C#\SmartHouse\SmartHouse\obj\Debug\
 SmartHouse
 none
 false
 DEBUG;TRACE
-C:\Users\user\Desktop\SmartHouse\SmartHouse\App.xaml
+C:\Users\user\Desktop\Code\C#\SmartHouse\SmartHouse\App.xaml
 6-1845084898
 
 48319013057
-20691930705
+201264291447
 Views\DeviceView.xaml;Views\MainView.xaml;Views\ParameterView.xaml;Views\SensorView.xaml;Views\TemplateDeviceView.xaml;Views\TemplateFirmwareView.xaml;
 
 True
